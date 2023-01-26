@@ -1,3 +1,5 @@
 export const API_URLS = {
-  DATA: {},
+  DATA: {
+    IMAGES: '/images',
+  },
 };
