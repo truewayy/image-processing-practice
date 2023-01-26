@@ -17,6 +17,9 @@ const style = css`
   main {
     display: block;
   }
+  div {
+    box-sizing: border-box;
+  }
   h1 {
     font-size: 2em;
     margin: 0.67em 0;

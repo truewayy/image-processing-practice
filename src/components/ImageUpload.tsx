@@ -1,48 +1,14 @@
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
 
 import { useFetchImage } from '../hooks/useFetchImage';
-import { imgToBase64 } from '../utils/imgToBase64';
 
 const ImageUpload = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [images, setImages] = useState<{ image: File; url: string }[]>([]);
-  const [file, setFile] = useState<FileList | null>();
-  const { images: oldImage } = useFetchImage([
-    'https://res.cloudinary.com/doyouhave/image/upload/v1674652200/12345/profile_rf2jwj.png',
-    'https://res.cloudinary.com/doyouhave/image/upload/v1674737243/12345/oglogo_dawyz2.png',
-  ]);
-
-  const selectImage = () => {
-    if (images.length >= 2)
-      return alert('이미지는 2개까지만 업로드 가능합니다.');
-    if (inputRef.current) {
-      inputRef.current.click();
-    }
-  };
-
-  const deleteImage = (clickedImage: File) => {
-    setImages((prev) => prev.filter((item) => item.image !== clickedImage));
-  };
-
-  useEffect(() => {
-    if (file) {
-      Array.from(file).map((image) => {
-        imgToBase64(image).then((data) =>
-          setImages((prev) => [...prev, { image: image, url: data as string }])
-        );
-      });
-    }
-  }, [file]);
-
-  useEffect(() => {
-    if (oldImage.length) {
-      setImages(oldImage);
-    }
-  }, [oldImage]);
+  const { images, inputRef, setFile, handleClick, handleDelete } =
+    useFetchImage([]);
 
   return (
-    <>
+    <Container>
+      {/* 연동 INPUT (hidden) */}
       <input
         type='file'
         accept='image/*'
@@ -50,39 +16,65 @@ const ImageUpload = () => {
         hidden
         onChange={(e) => setFile(e.target.files)}
       />
-      <span
-        style={{
-          display: 'inline-block',
-          border: '1px solid black',
-          borderRadius: '10px',
-          padding: '10px',
-          cursor: 'pointer',
-        }}
-        onClick={selectImage}>
-        {images.length}/2
-      </span>
-      <ImgContainer>
+      {/* 사진 추가 버튼 */}
+      <AddButton onClick={handleClick}>
+        <img src='/icon-camera.png' alt='camera' width={40} />
+        <div>{images.length}/2</div>
+      </AddButton>
+
+      {/* 사진 미리보기 */}
+      <Container id='image'>
         {images.map((item) => (
-          <div key={item.image?.name}>
-            <span onClick={() => deleteImage(item.image)}>x</span>
-            <ImgBox src={item.url} size={100} />
-          </div>
+          <ImgBox src={item.url} key={item.image.name}>
+            {/* 사진 삭제 버튼 */}
+            <RemoveButton
+              src='/remove-button.png'
+              onClick={() => handleDelete(item.image)}
+            />
+          </ImgBox>
         ))}
-      </ImgContainer>
-    </>
+      </Container>
+    </Container>
   );
 };
 
 export default ImageUpload;
 
-const ImgContainer = styled.div`
+const Container = styled.div`
   display: flex;
+  align-items: center;
+  &#image {
+    gap: 10px;
+  }
 `;
 
-const ImgBox = styled.div<{ src: string; size: number }>`
-  width: ${({ size }) => size}px;
-  height: ${({ size }) => size}px;
+const ImgBox = styled.div<{ src: string }>`
+  position: relative;
+  width: 100px;
+  height: 100px;
   border: 1px solid black;
+  border-radius: 10px;
   background: url(${({ src }) => src}) no-repeat center center;
   background-size: cover;
+`;
+
+const AddButton = styled.div`
+  border: 2px solid black;
+  border-radius: 10px;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  font-weight: bold;
+  cursor: pointer;
+`;
+
+const RemoveButton = styled.img`
+  position: absolute;
+  width: 20px;
+  right: 0;
+  cursor: pointer;
 `;

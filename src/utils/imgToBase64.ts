@@ -1,6 +1,7 @@
+// 이미지를 base64로 변환하는 함수
 export const imgToBase64 = (image: File) =>
-  new Promise((resolve) => {
+  new Promise<string>((resolve) => {
     const reader = new FileReader();
     reader.readAsDataURL(image);
-    reader.onload = (e: ProgressEvent<FileReader>) => resolve(e.target?.result);
+    reader.onload = () => resolve(reader.result as string);
   });

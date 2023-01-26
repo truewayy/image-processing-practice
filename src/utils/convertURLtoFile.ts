@@ -1,3 +1,4 @@
+// 이미지 URL을 File로 변환하는 함수
 export const convertURLtoFile = async (url: string) => {
   const response = await fetch(url);
   const data = await response.blob();

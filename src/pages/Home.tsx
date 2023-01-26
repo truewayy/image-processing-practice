@@ -1,17 +1,20 @@
+import styled from '@emotion/styled';
+
 import ImageUpload from '../components/ImageUpload';
 
 const Home = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
+    <Container>
       <ImageUpload />
-    </div>
+    </Container>
   );
 };
 
 export default Home;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
