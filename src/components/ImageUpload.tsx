@@ -2,9 +2,13 @@ import styled from '@emotion/styled';
 
 import { useFetchImage } from '../hooks/useFetchImage';
 
-const ImageUpload = () => {
+interface ImageUploadProps {
+  oldImage: string[];
+}
+
+const ImageUpload = ({ oldImage }: ImageUploadProps) => {
   const { images, inputRef, setFile, handleClick, handleDelete } =
-    useFetchImage([]);
+    useFetchImage(oldImage);
 
   return (
     <Container>
